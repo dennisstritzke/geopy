@@ -106,6 +106,7 @@ class MapBox(Geocoder):
             timeout=DEFAULT_SENTINEL,
             proximity=None,
             country=None,
+            language=None,
             bbox=None
     ):
         """
@@ -131,6 +132,11 @@ class MapBox(Geocoder):
             Might be a Python list of strings.
 
         :type country: str or list
+
+        :param str language: This parameter controls the language of the text supplied in
+            responses, and also affects result scoring, with results matching the user’s
+            query in the requested language being preferred over results that match in
+            another language. You can pass two letters country codes (ISO 639-1).
 
         :param bbox: The bounding box of the viewport within which
             to bias geocode results more prominently.
@@ -158,6 +164,9 @@ class MapBox(Geocoder):
         if proximity:
             p = Point(proximity)
             params['proximity'] = "%s,%s" % (p.longitude, p.latitude)
+
+        if language:
+            params['language'] = language
 
         quoted_query = quote(query.encode('utf-8'))
         url = "?".join((self.api % dict(endpoint=self.endpoint, query=quoted_query),
